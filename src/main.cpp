@@ -25,5 +25,6 @@ int main( int argc, char **argv )
 
    spdlog::info( "Resource path is: {}", Enviroment::get_env_path() );
 
+
    return 0;
 }

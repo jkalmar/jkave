@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 jkalmar <janko.kalmar@gmail.com>
+ * Copyright (c) 2019 jkalmar <email>
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,43 +23,33 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef ENVIROMENT_H
-#define ENVIROMENT_H
+#include "Texture.h"
 
-#include <string>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-
-#define GL3_PROTOTYPES 1
-#include <GL/glew.h>
-
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
-
-/**
- * @todo write docs
- */
-class Enviroment
+Texture::Texture()
 {
-public:
-   Enviroment();
-   ~Enviroment();
 
-   bool init();
-   bool deinit();
-   void set_opengl_attrs();
-   void destroy_window();
+}
 
-   SDL_Window *get_window();
+Texture::~Texture()
+{
 
-   static std::string get_env_path( const std::string &subDir = "" );
-   static SDL_Texture *load_texture( const std::string &file, SDL_Renderer *ren );
+}
 
-private:
-   SDL_Window *_window;
-   SDL_GLContext _gl_context;
+bool Texture::init()
+{
+   bool ret = true;
 
-};
 
-#endif // ENVIROMENT_H
+   glGenBuffers( 2, vbo );
+   glGenVertexArrays( 1, vao );
+
+   glBindVertexArray( vao[ 0 ] );
+
+   return ret;
+}
+
+void Texture::render()
+{
+}
+
+

@@ -26,7 +26,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#define SDL_LOG_ERR( cond ) if( ( cond ) ) spdlog::error( SDL_GetError() );
+#define SDL_LOG_ERR( cond ) if( ( cond ) ) spdlog::error( SDL_GetError() ); SDL_ClearError();
 
 /**
  * @todo write docs

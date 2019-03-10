@@ -28,6 +28,8 @@
 
 #include "Enviroment.h"
 
+#include <glm/glm.hpp>
+
 /**
  * @todo write docs
  */
@@ -41,6 +43,10 @@ public:
    void handle_input();
 
 private:
+   void render();
+
+   glm::vec4 _color;
+
    Enviroment _env;
 
    bool _running = true;

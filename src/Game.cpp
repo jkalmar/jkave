@@ -31,37 +31,39 @@
 
 #include <SDL2/SDL.h>
 
+#include <glm/glm.hpp>
+
 void Game::init()
 {
    /* Initialize SDL */
-   SDL_Init( SDL_INIT_EVERYTHING );
-   IMG_Init( IMG_INIT_PNG );
-   TTF_Init();
+   SDL_LOG_ERR( ! _env.init() );
 
-   SDL_LOG_ERR( ! _env.create_window() );
+   _color.r = 0.0;
+   _color.g = 0.0;
+   _color.b = 0.0;
+   _color.a = 1.0;
 }
 
 void Game::deinit()
 {
    /* Deinitialize everything */
-   TTF_Quit();
-   IMG_Quit();
-   SDL_Quit();
-
-   _env.destroy_window();
+   _env.deinit();
 }
 
 void Game::main_loop()
 {
+
    while( _running )
    {
-      SDL_RenderClear( _env.get_renderer() );
+      glClearColor( _color.r, _color.g, _color.b, _color.a );
+      glClear( GL_COLOR_BUFFER_BIT );
 
       handle_input();
+      render();
 
 
       /* Place your simulation code and rendering code here */
-      SDL_RenderPresent( _env.get_renderer() );
+      SDL_GL_SwapWindow( _env.get_window() );
    }
 }
 
@@ -84,18 +86,24 @@ void Game::handle_input()
          {
          case SDLK_UP:
             spdlog::info( "Up button pressed" );
+            _color = glm::vec4( 1.0, 0.0, 0.0, 1.0 );
             break;
 
          case SDLK_DOWN:
             spdlog::info( "Down button pressed" );
+            _color = glm::vec4( 0.0, 1.0, 0.0, 1.0 );
             break;
 
          case SDLK_LEFT:
             spdlog::info( "Left button pressed" );
+            _color = glm::vec4( 0.0, 0.0, 1.0, 1.0 );
+
             break;
 
          case SDLK_RIGHT:
             spdlog::info( "Right button pressed" );
+            _color = glm::vec4( 1.0, 1.0, 1.0, 1.0 );
+
             break;
 
          case SDLK_SPACE:
@@ -114,7 +122,10 @@ void Game::handle_input()
          }
       }
    }
-
-
 }
+
+void Game::render()
+{
+}
+
 

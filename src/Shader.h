@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 jkalmar <janko.kalmar@gmail.com>
+ * Copyright (c) 2019 jkalmar <janko.kalmar@google.com>
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,43 +23,56 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef ENVIROMENT_H
-#define ENVIROMENT_H
+#ifndef SHADER_H
+#define SHADER_H
+
+#include <GL/glew.h>
+#include <SDL2/SDL.h>
 
 #include <string>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-
-#define GL3_PROTOTYPES 1
-#include <GL/glew.h>
-
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#include <vector>
+#include <sstream>
+#include <fstream>
+#include <iostream>
 
 /**
  * @todo write docs
  */
-class Enviroment
+class Shader
 {
 public:
-   Enviroment();
-   ~Enviroment();
+   Shader();
+   ~Shader();
 
+   void use_program();
    bool init();
-   bool deinit();
-   void set_opengl_attrs();
-   void destroy_window();
 
-   SDL_Window *get_window();
+   void clean_up();
 
-   static std::string get_env_path( const std::string &subDir = "" );
-   static SDL_Texture *load_texture( const std::string &file, SDL_Renderer *ren );
+   std::string vertextPath;
+   std::string fragmentPath;
+   std::string geometryPath;
+
+   void add_attr_location( int index, const std::string &attr );
 
 private:
-   SDL_Window *_window;
-   SDL_GLContext _gl_context;
+   bool init_vertex_shader();
+   bool init_fragment_shader();
+   bool link_shaders();
 
+   std::string read_file( const char *file );
+   std::string shader_link_err( GLuint shaderId );
+   std::string shader_cc_err( GLuint shaderId );
+
+   // The handle to our shader program
+   GLuint shaderProgram = 0;
+
+   // The handles to the induvidual shader
+   GLuint vertexshader = 0;
+   GLuint fragmentShader = 0;
+   GLuint geometryShader = 0;
+
+   std::vector< std::pair< int, std::string > > attrLoc;
 };
 
-#endif // ENVIROMENT_H
+#endif // SHADER_H

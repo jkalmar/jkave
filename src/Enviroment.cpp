@@ -44,37 +44,54 @@ Enviroment::~Enviroment()
 {
 }
 
-bool Enviroment::create_window()
+bool Enviroment::init()
 {
+   SDL_Init( SDL_INIT_EVERYTHING );
+   IMG_Init( IMG_INIT_PNG );
+   TTF_Init();
+
    _window = SDL_CreateWindow( "jcave",
                                SDL_WINDOWPOS_CENTERED,
                                SDL_WINDOWPOS_CENTERED,
                                WINDOW_WIDTH, WINDOW_HEIGHT,
-                               0 );
+                               SDL_WINDOW_OPENGL );
 
-   _renderer = SDL_CreateRenderer( _window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+   _gl_context = SDL_GL_CreateContext( _window );
 
+   set_opengl_attrs();
 
-   return _window && _renderer;
+   glewExperimental = GL_TRUE;
+   glewInit();
+
+   return _window && _gl_context;
 }
 
-void Enviroment::destroy_window()
+bool Enviroment::deinit()
 {
-   if( _renderer )
-      SDL_DestroyRenderer( _renderer );
+   SDL_GL_DeleteContext( _gl_context );
+   SDL_DestroyWindow( _window );
 
-   if( _window )
-      SDL_DestroyWindow( _window );
+   TTF_Quit();
+   IMG_Quit();
+   SDL_Quit();
+
+   return true;
 }
+
+void Enviroment::set_opengl_attrs()
+{
+   SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
+   SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
+   SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 2 );
+   SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+
+   SDL_GL_SetSwapInterval( 1 );
+}
+
 
 SDL_Window *Enviroment::get_window()
 {
    return _window;
-}
-
-SDL_Renderer *Enviroment::get_renderer()
-{
-   return _renderer;
 }
 
 std::string Enviroment::get_env_path( const std::string &subDir )
